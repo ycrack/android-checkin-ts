@@ -1,0 +1,7 @@
+{
+  "imports": {
+    "std/": "https://deno.land/std@0.215.0/",
+    "cliffy/": "https://deno.land/x/cliffy@v1.0.0-rc.3/",
+    "@bufbuild/protobuf": "npm:@bufbuild/protobuf@1.7.2"
+  }
+}
