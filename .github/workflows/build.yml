@@ -33,7 +33,7 @@ jobs:
         uses: denoland/setup-deno@v1
 
       - name: compile
-        run: deno compile --allow-net --target=${{ matrix.target }} --output=out/checkin main.ts
+        run: deno compile --allow-net --target=${{ matrix.target }} --output=out/checkin-${{ matrix.target }} main.ts
 
       - name: cache
         uses: actions/cache@v4
