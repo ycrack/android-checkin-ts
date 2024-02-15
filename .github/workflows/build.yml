@@ -2,7 +2,9 @@ name: build
 
 on:
   push:
-    branches: [main]
+    paths-ignore:
+      - .gitignore
+      - README.md
 
 jobs:
   build:
@@ -23,23 +25,38 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
 
+      - name: cache buf
+        id: cache-buf
+        uses: actions/cache@v4
+        with:
+          path: gen
+          key: buf-${{ hashFiles('checkin.proto') }}
+
       - name: setup buf
+        if: ${{ steps.cache-buf.outputs.cache-hit != 'true' }}
         uses: bufbuild/buf-setup-action@v1
 
-      - name: generate
+      - name: generate buf
+        if: ${{ steps.cache-buf.outputs.cache-hit != 'true' }}
         run: buf generate
 
       - name: setup deno
         uses: denoland/setup-deno@v1
 
-      - name: compile
-        run: deno compile --allow-net --target=${{ matrix.target }} --output=out/checkin main.ts
-
-      - name: cache
+      - name: cache dependencies
+        id: cache
         uses: actions/cache@v4
         with:
           path: ${{ env.DENO_DIR }}
           key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
+
+      - name: install dependencies
+        if: ${{ steps.cache.outputs.cache-hit != 'true' }}
+        continue-on-error: true
+        run: deno cache main.ts
+
+      - name: compile
+        run: deno compile --allow-net --target=${{ matrix.target }} --output=out/checkin main.ts
 
       - name: upload artifact
         uses: actions/upload-artifact@v4
