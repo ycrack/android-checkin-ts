@@ -1,0 +1,41 @@
+name: build
+
+on:
+  push:
+    branches: [$default-branch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      DENO_DIR: ~/.cache/deno
+
+    strategy:
+      matrix:
+        target:
+          - x86_64-unknown-linux-gnu
+          - x86_64-pc-windows-msvc
+          - x86_64-apple-darwin
+          - aarch64-apple-darwin
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: setup-deno
+        uses: denoland/setup-deno@v1
+
+      - name: compile
+        run: deno compile --allow-net --target=${{ matrix.target }} --output=out/checkin main.ts
+
+      - name: cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.DENO_DIR }}
+          key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
+
+      - name: upload-artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: out/*
