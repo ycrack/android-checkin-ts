@@ -1,5 +1,5 @@
-version: v1
+version: v2
 plugins:
-  - plugin: buf.build/bufbuild/es:v1.7.2
+  - remote: buf.build/bufbuild/es:v2.0.0
     opt: target=ts
     out: gen

@@ -2,11 +2,33 @@
   "version": "3",
   "packages": {
     "specifiers": {
-      "npm:@bufbuild/protobuf@1.7.2": "npm:@bufbuild/protobuf@1.7.2"
+      "jsr:@cliffy/table@^1.0.0-rc.5": "jsr:@cliffy/table@1.0.0-rc.5",
+      "jsr:@std/cli@1.0.0-rc.2": "jsr:@std/cli@1.0.0-rc.2",
+      "jsr:@std/cli@^1.0.3": "jsr:@std/cli@1.0.3",
+      "jsr:@std/fmt@~0.225.4": "jsr:@std/fmt@0.225.6",
+      "npm:@bufbuild/protobuf@^2.0.0": "npm:@bufbuild/protobuf@2.0.0"
+    },
+    "jsr": {
+      "@cliffy/table@1.0.0-rc.5": {
+        "integrity": "2b3e1b4764bbb56b0c39aeba95bc0bb551d9bd4475fbb6d1ce368c08b7ef9eb3",
+        "dependencies": [
+          "jsr:@std/cli@1.0.0-rc.2",
+          "jsr:@std/fmt@~0.225.4"
+        ]
+      },
+      "@std/cli@1.0.0-rc.2": {
+        "integrity": "97dfae82b9f0e189768ebfa7a5da53375955b94bad0a1804f8e3b73563b03787"
+      },
+      "@std/cli@1.0.3": {
+        "integrity": "9a0488b5d2e58d29dce106a941eecec7181fae996bf0d2225563f1ca7e4b100c"
+      },
+      "@std/fmt@0.225.6": {
+        "integrity": "aba6aea27f66813cecfd9484e074a9e9845782ab0685c030e453a8a70b37afc8"
+      }
     },
     "npm": {
-      "@bufbuild/protobuf@1.7.2": {
-        "integrity": "sha512-i5GE2Dk5ekdlK1TR7SugY4LWRrKSfb5T1Qn4unpIMbfxoeGKERKQ59HG3iYewacGD10SR7UzevfPnh6my4tNmQ==",
+      "@bufbuild/protobuf@2.0.0": {
+        "integrity": "sha512-sw2JhwJyvyL0zlhG61aDzOVryEfJg2PDZFSV7i7IdC7nAE41WuXCru3QWLGiP87At0BMzKOoKO/FqEGoKygGZQ==",
         "dependencies": {}
       }
     }
@@ -65,7 +87,9 @@
   },
   "workspace": {
     "dependencies": [
-      "npm:@bufbuild/protobuf@1.7.2"
+      "jsr:@cliffy/table@^1.0.0-rc.5",
+      "jsr:@std/cli@^1.0.3",
+      "npm:@bufbuild/protobuf@^2.0.0"
     ]
   }
 }

@@ -1,11 +1,12 @@
 #!/usr/bin/env -S deno run --allow-net
-import { parseArgs } from "std/cli/parse_args.ts";
-import { Table } from "cliffy/table/mod.ts";
+import { parseArgs } from "@std/cli";
+import { Table } from "@cliffy/table";
+import { create, fromBinary, toBinary } from "@bufbuild/protobuf";
 import {
-  AndroidCheckinRequest,
-  AndroidCheckinProto,
-  AndroidBuildProto,
-  AndroidCheckinResponse,
+  AndroidCheckinRequestSchema,
+  AndroidCheckinProtoSchema,
+  AndroidBuildProtoSchema,
+  AndroidCheckinResponseSchema,
 } from "./gen/checkin_pb.ts";
 
 const flags = parseArgs(Deno.args, {
@@ -13,11 +14,11 @@ const flags = parseArgs(Deno.args, {
 });
 
 async function get_update_url(fingerprint: string, device: string) {
-  const req = new AndroidCheckinRequest({
+  const req = create(AndroidCheckinRequestSchema, {
     digest: "",
     version: 3,
-    checkin: new AndroidCheckinProto({
-      build: new AndroidBuildProto({
+    checkin: create(AndroidCheckinProtoSchema, {
+      build: create(AndroidBuildProtoSchema, {
         fingerprint,
         timestamp: BigInt(0),
         device,
@@ -27,7 +28,7 @@ async function get_update_url(fingerprint: string, device: string) {
 
   const res = await fetch("https://android.clients.google.com/checkin", {
     method: "POST",
-    body: req.toBinary(),
+    body: toBinary(AndroidCheckinRequestSchema, req),
     headers: {
       "Content-Type": "application/x-protobuf",
     },
@@ -35,7 +36,7 @@ async function get_update_url(fingerprint: string, device: string) {
 
   if (res.ok) {
     const decoder = new TextDecoder();
-    const result = AndroidCheckinResponse.fromBinary(new Uint8Array(await res.arrayBuffer()))
+    const result = fromBinary(AndroidCheckinResponseSchema, new Uint8Array(await res.arrayBuffer()))
       .setting.reduce((acc, cur) => {
         const key = decoder.decode(cur.name);
         switch (key) {
